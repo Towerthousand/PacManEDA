@@ -1,0 +1,20 @@
+Action.o: Action.cc Action.hh Utils.hh BackTrace.hh PosDir.hh Board.hh
+BackTrace.o: BackTrace.cc BackTrace.hh
+Board.o: Board.cc Board.hh Utils.hh BackTrace.hh PosDir.hh Action.hh
+Game.o: Game.cc Game.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
+ Action.hh Player.hh Registry.hh
+Null.o: Null.cc Player.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
+ Action.hh Registry.hh
+PacMan.o: PacMan.cc Game.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
+ Action.hh Player.hh Registry.hh
+Player.o: Player.cc Player.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
+ Action.hh Registry.hh
+PosDir.o: PosDir.cc PosDir.hh Utils.hh BackTrace.hh
+Registry.o: Registry.cc Registry.hh Utils.hh BackTrace.hh
+SecGame.o: SecGame.cc Game.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
+ Action.hh Player.hh Registry.hh
+SecPacMan.o: SecPacMan.cc Game.hh Utils.hh BackTrace.hh PosDir.hh \
+ Board.hh Action.hh Player.hh Registry.hh
+Utils.o: Utils.cc Utils.hh BackTrace.hh
+itsshowtime.o: itsshowtime.cc Player.hh Utils.hh BackTrace.hh PosDir.hh \
+ Board.hh Action.hh Registry.hh
