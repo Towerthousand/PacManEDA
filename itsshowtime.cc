@@ -1,47 +1,12 @@
 #include "Player.hh"
-
 #include <cmath>
-
 using namespace std;
-
-
-
-/**
- * Write the name of your player and save this file
- * with the same name and .cc extension.
- */
 #define PLAYER_NAME itsshowtime
-
-
-
 struct PLAYER_NAME : public Player {
+	static Player* factory () {return new PLAYER_NAME;}
 
-
-    /**
-     * Factory: returns a new instance of this class.
-     * Do not modify this function.
-     */
-    static Player* factory () {
-        return new PLAYER_NAME;
-    }
-
-
-    /**
-     * Attributes for your player can be defined here.
-     */     
     vector<Dir> dirs;
 
-
-    /**
-     * Play method.
-     * 
-     * This method will be invoked once per each round.
-     * You have to read the board here to place your actions
-     * for this round.
-     *
-     * In this example, each robot selects a random direction
-     * and follows it as long as it does not hit a wall.
-     */     
     virtual void play () {
 
         // initialization
@@ -91,10 +56,5 @@ struct PLAYER_NAME : public Player {
 
 };
 
-
-
-/**
- * Do not modify the following line.
- */
 RegisterPlayer(PLAYER_NAME);
 

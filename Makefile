@@ -1,6 +1,6 @@
 # Add your players here with .o extension.
 
-PLAYERS = itsshowtime.o Demo.o
+PLAYERS = itsshowtime.o Demo.o dummy/AIDummy.o
 
 # Do not modify past this point.
 

@@ -1,5 +1,5 @@
 *.user
-*.o
+/*.o
 SecPacMan
 PacMan
 *.pac
