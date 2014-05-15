@@ -3,7 +3,7 @@ BackTrace.o: BackTrace.cc BackTrace.hh
 Board.o: Board.cc Board.hh Utils.hh BackTrace.hh PosDir.hh Action.hh
 Game.o: Game.cc Game.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
  Action.hh Player.hh Registry.hh
-Null.o: Null.cc Player.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
+Demo.o: Demo.cc Player.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
  Action.hh Registry.hh
 PacMan.o: PacMan.cc Game.hh Utils.hh BackTrace.hh PosDir.hh Board.hh \
  Action.hh Player.hh Registry.hh

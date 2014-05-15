@@ -11,12 +11,12 @@ SOURCES += main.cpp \
     PosDir.cc \
     Player.cc \
     PacMan.cc \
-    Null.cc \
     Game.cc \
     Board.cc \
     BackTrace.cc \
     Action.cc \
-    itsshowtime.cc
+    itsshowtime.cc \
+    Demo.cc
 
 HEADERS += \
     Utils.hh \
