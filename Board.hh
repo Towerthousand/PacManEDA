@@ -124,10 +124,11 @@ class Board {
     /**
      * Returns a reference to the current cpu status of a player.
      */
+	public:
     inline double& status (int player) {
         return status_[player];
     }
-
+	private:
     /**
      * Computes the next board aplying the given actions as to the current board.
      * It also returns the actual actions performed.

@@ -33,11 +33,11 @@ void Game::run (vector<string> names, istream& is, ostream& os) {
     
     Board b1 = b0;
     for (int round = 1; round < b0.nb_rounds(); ++round) {
-        cerr << "info: start round " << round << endl;
-        os << "actions" << endl;
+		cerr << "info: start round " << round << endl;
+		os << "actions" << endl;
         vector<Action> actions;
         for (int player = 0; player < b0.nb_players(); ++player) {
-            cerr << "info:     start player " << player << endl;
+			cerr << "info:     start player " << player << endl;
             Action a;
             players[player]->reset(player, b1, a);
             players[player]->play();
@@ -45,18 +45,18 @@ void Game::run (vector<string> names, istream& is, ostream& os) {
 
             os << player << endl;
             Action(*players[player]).print(os);
-            cerr << "info:     end player " << player << endl;
+			cerr << "info:     end player " << player << endl;
         }
         Action actions_done;
-        cerr << "start next" << endl;
+		cerr << "start next" << endl;
         Board b2 = b1.next(actions, actions_done, b0);
-        cerr << "end next" << endl;
-        os << endl << "movements" << endl;
+		cerr << "end next" << endl;
+		os << endl << "movements" << endl;
         actions_done.print(os);
         b2.print(os);
         // b2.print_debug(ofs);
         b1 = b2;
-        cerr << "info: end round " << round << endl;
+		cerr << "info: end round " << round << endl;
     }
     cerr << "info: game played" << endl;
 }
