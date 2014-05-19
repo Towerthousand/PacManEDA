@@ -102,7 +102,7 @@ struct PLAYER_NAME : public Player {
 				case PillRush:
 					return -getClosestCell(Pill, p, PacMan, false).first;
 				case HammerRush:
-					return -getClosestCell(Hammer, p, PacMan, false).first;
+					return -getClosestCell(Hammer , p, PacMan, false).first;
 				case KillRush:
 					return -getClosestRobot(Ghost, p, PowerPacMan, false).first;
 			}
@@ -110,7 +110,6 @@ struct PLAYER_NAME : public Player {
 		}
 
 		double scorePositionPacManGather(Pos p) {
-			cerr << "SCORING POS(GATHER): " << p << endl;
 			double currentScore = 0;
 			Robot pac = pacman(me());
 
@@ -135,15 +134,11 @@ struct PLAYER_NAME : public Player {
 		}
 
 		double scorePositionPacManFlee(Pos p) {
-			cerr << "SCORING POS(FLEE): " << p << endl;
 			double currentScore = 0;
 			v_distloc ghosts = getRobotsByDistance(Ghost, p, Ghost, nb_ghosts()*nb_players(), true);
-
 			for(unsigned int i = 0; i < ghosts.size() && i < 1; ++i) {
 				currentScore -= ghosts[i].first;
 			}
-
-			cerr << "Ghosts: " << ghosts.size() << endl;
 			return currentScore;
 		}
 

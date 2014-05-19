@@ -58,7 +58,16 @@ void Game::run (vector<string> names, istream& is, ostream& os) {
         b1 = b2;
 		cerr << "info: end round " << round << endl;
     }
-    cerr << "info: game played" << endl;
+	cerr << "info: game played" << endl;
+	int max = b1.score(0);
+	int best = 0;
+	for(unsigned int i = 1; i < players.size(); ++i) {
+		if(b1.score(i) > max) {
+			max = b1.score(i);
+			best = i;
+		}
+	}
+	cerr << "WON: " << best << endl;
 }
 
 
