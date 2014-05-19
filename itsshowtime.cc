@@ -22,6 +22,7 @@ struct PLAYER_NAME : public Player {
 		};
 
 		virtual void play () {
+			bool debug = false;
 			// initialization
 			if (round() == 0) {
 				d[0] = Top;
@@ -50,9 +51,11 @@ struct PLAYER_NAME : public Player {
 					chosen = i;
 				}
 			}
-			for(unsigned int i = 0; i < scores.size(); ++i) cerr << "D:" << d2c(d[i]) << " P:" << possible[i] << " S:" << scores[i] << endl;
-			if(chosen == -1)  {chosen = rand()%4; cerr << "(RAND)";};
-			cerr << " CHOSEN: " << d2c(d[chosen]) << endl;
+			if(debug) {
+				for(unsigned int i = 0; i < scores.size(); ++i) cerr << "D:" << d2c(d[i]) << " P:" << possible[i] << " S:" << scores[i] << endl;
+				if(chosen == -1)  {chosen = rand()%4; cerr << "(RAND)";};
+				cerr << " CHOSEN: " << d2c(d[chosen]) << endl;
+			}
 			move_my_pacman(d[chosen]);
 
 			/////////////////////////GHOSTS

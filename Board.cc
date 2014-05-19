@@ -306,7 +306,7 @@ Board Board::next (const vector<Action>& as, Action& actions_done, const Board& 
                 for (set<Pos>::iterator it = b.cageset_.begin();  it != b.cageset_.end(); ++it) {
                     v.push_back(*it);
                 }
-                cerr << v.size() << endl;
+				//cerr << v.size() << endl;
                 random_shuffle(v.begin(), v.end());
                 
                 for (int i = 0; i <int(v.size()) and not fnd; ++i) {
@@ -316,7 +316,7 @@ Board Board::next (const vector<Action>& as, Action& actions_done, const Board& 
                         r.alive = true;
                         fnd = true;
                 }   }
-                if (not fnd) cerr << "info: cannot place ghost in cage." << endl;
+				//if (not fnd) cerr << "info: cannot place ghost in cage." << endl;
             }
         }
         
@@ -337,7 +337,7 @@ Board Board::next (const vector<Action>& as, Action& actions_done, const Board& 
                         b.robots_[id].pos = p;
                         r.alive = true;
                 }   }
-                if (not fnd) cerr << "info: cannot place pacman in board." << endl;            
+				//if (not fnd) cerr << "info: cannot place pacman in board." << endl;
     }   }   }
 
     return b;
