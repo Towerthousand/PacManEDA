@@ -98,8 +98,9 @@ struct PLAYER_NAME : public Player {
 				while(!v.empty() && v[0].first < 0) v.erase(v.begin());
 				if(!v.empty() && v[0].second == p.pos) return HammerRush;
 			}
-			distloc closestGhost = getClosestRobot(Ghost, p.pos, p.type, false);
-			if(p.type == PowerPacMan && closestGhost.first != -1 && closestGhost.first < 20) return KillRush;
+			v_distloc gs = getRobotsByDistance(Ghost, p.pos, p.type, nb_ghosts()+1, false);
+			while(!gs.empty() && robot(cell(gs[0].second).id).player == me()) gs.erase(gs.begin());
+			if(!gs.empty() && p.type == PowerPacMan && gs[0].first < 20) return KillRush;
 			distloc closestPill = getClosestCell(Pill, p.pos, p.type, false);
 			if(closestPill.first >= 0 && closestPill.first < 15) {
 				v_distloc v(3);
@@ -111,7 +112,7 @@ struct PLAYER_NAME : public Player {
 				while(!v.empty() && v[0].first < 0) v.erase(v.begin());
 				if(!v.empty() && v[0].second == p.pos) return PillRush;
 			}
-			if(closestGhost.first >= 0 && closestGhost.first < 5) return Flee;
+			if(!gs.empty() && gs[0].first < 5) return Flee;
 			return Gather;
 		}
 
@@ -137,8 +138,9 @@ struct PLAYER_NAME : public Player {
 				}
 				case KillRush: {
 					//cerr << "KILLRUSH" << endl;
-					double dist = getClosestRobot(Ghost, p, PowerPacMan, true).first;
-					return (dist == -1? -100000000 : -dist);
+					v_distloc gs = getRobotsByDistance(Ghost, p, PacMan, nb_ghosts()+1, false);
+					while(!gs.empty() && robot(cell(gs[0].second).id).player == me()) gs.erase(gs.begin());
+					return -gs[0].first;
 				}
 			}
 			return 0.0f;
