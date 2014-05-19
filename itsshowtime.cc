@@ -22,7 +22,7 @@ struct PLAYER_NAME : public Player {
 		};
 
 		virtual void play () {
-			bool debug = true;
+			bool debug = false;
 			// initialization
 			if (round() == 0) {
 				d[0] = Top;
@@ -119,24 +119,24 @@ struct PLAYER_NAME : public Player {
 			switch(s) {
 				case Flee:{
 					float f_contrib = 1-(float(getClosestRobot(Ghost,pacman(me()).pos,Ghost, true).first)/FLEE_RADIUS);
-					cerr << "FLEE (" << f_contrib << ")" << endl;
+					//cerr << "FLEE (" << f_contrib << ")" << endl;
 					return  scorePositionPacManGather(p)*(1-f_contrib)+scorePositionPacManFlee(p)*f_contrib;
 				}
 				case Gather:
-					cerr << "GATHER" << endl;
+					//cerr << "GATHER" << endl;
 					return scorePositionPacManGather(p);
 				case PillRush: {
-					cerr << "PILLRUSH" << endl;
+					//cerr << "PILLRUSH" << endl;
 					double dist = getClosestCell(Pill, p, PacMan, false).first;
 					return (dist == -1? -100000000 : -dist);
 				}
 				case HammerRush: {
-					cerr << "HAMMERRUSH" << endl;
+					//cerr << "HAMMERRUSH" << endl;
 					double dist = getClosestCell(Hammer , p, PacMan, false).first;
 					return (dist == -1? -100000000 : -dist);
 				}
 				case KillRush: {
-					cerr << "KILLRUSH" << endl;
+					//cerr << "KILLRUSH" << endl;
 					double dist = getClosestRobot(Ghost, p, PowerPacMan, true).first;
 					return (dist == -1? -100000000 : -dist);
 				}
