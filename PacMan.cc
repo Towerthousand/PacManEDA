@@ -31,7 +31,7 @@ void version () {
 int main (int argc, char** argv) {
 
 	int won = 0;
-	int nump = 100;
+	int nump = 1;
 	if (argc == 1) {
 		help(argc, argv);
 		return EXIT_SUCCESS;

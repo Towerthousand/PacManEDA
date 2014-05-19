@@ -11,18 +11,18 @@ int Game::run (vector<string> names, istream& is, ostream& os) {
 	//cerr << "info: loaded game" << endl;
 
     if (int(names.size()) != b0.nb_players()) {
-		//cerr << "fatal: wrong number of players." << endl;
+		cerr << "fatal: wrong number of players." << endl;
         exit(EXIT_FAILURE);
     }
 
     vector<Player*> players;        
     for (int player = 0; player < b0.nb_players(); ++player) {
         string name = names[player];
-		//cerr << "info: loading player " << name << endl;
+		cerr << "info: loading player " << name << endl;
         players.push_back(Registry::new_player(name));
         b0.names_[player] = name;
     }
-	//cerr << "info: players loaded" << endl;
+	cerr << "info: players loaded" << endl;
 
     // ofstream ofs("/tmp/debug.txt");
 
@@ -33,7 +33,7 @@ int Game::run (vector<string> names, istream& is, ostream& os) {
     
     Board b1 = b0;
     for (int round = 1; round < b0.nb_rounds(); ++round) {
-		//cerr << "info: start round " << round << endl;
+		cerr << "info: start round " << round << endl;
 		os << "actions" << endl;
         vector<Action> actions;
         for (int player = 0; player < b0.nb_players(); ++player) {
@@ -56,7 +56,7 @@ int Game::run (vector<string> names, istream& is, ostream& os) {
         b2.print(os);
         // b2.print_debug(ofs);
         b1 = b2;
-		//cerr << "info: end round " << round << endl;
+		cerr << "info: end round " << round << endl;
     }
 	//cerr << "info: game played" << endl;
 	int max = b1.score(0);

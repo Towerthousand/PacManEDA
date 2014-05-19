@@ -22,7 +22,7 @@ struct PLAYER_NAME : public Player {
 		};
 
 		virtual void play () {
-			bool debug = false;
+			bool debug = true;
 			// initialization
 			if (round() == 0) {
 				d[0] = Top;
@@ -43,7 +43,7 @@ struct PLAYER_NAME : public Player {
 				scores[i] = scorePositionPacMan(dest(p,d[i]), s);
 			}
 			//minimax
-			double max = -10000000.0;
+			double max = -100000000000.0;
 			int chosen = -1;
 			for(int i = 0; i < 4; ++i) {
 				if(possible[i] && max < scores[i]) {
@@ -78,8 +78,10 @@ struct PLAYER_NAME : public Player {
 				while(!v.empty() && v[0].first < 0) v.erase(v.begin());
 				if(!v.empty() && v[0].second == p.pos) return HammerRush;
 			}
+			distloc closestGhost = getClosestRobot(Ghost, p.pos,Ghost, true);
+			if(p.type == PowerPacMan && closestGhost.first != -1 && closestGhost.first < 20) return KillRush;
 			distloc closestPill = getClosestCell(Pill, p.pos, PacMan, false);
-			if(closestPill.first >= 0) {
+			if(closestPill.first >= 0 && closestPill.first < 15) {
 				v_distloc v(3);
 				v[0] = getClosestRobot(PacMan,closestPill.second,Ghost,true);
 				v[1] = getClosestRobot(Ghost,closestPill.second,Ghost,true);
@@ -89,8 +91,7 @@ struct PLAYER_NAME : public Player {
 				while(!v.empty() && v[0].first < 0) v.erase(v.begin());
 				if(!v.empty() && v[0].second == p.pos) return PillRush;
 			}
-			distloc closestGhost = getClosestRobot(Ghost, p.pos,Ghost, true);
-			if(closestGhost.first >= 0 && closestGhost.first < 5) return (p.type == PowerPacMan?KillRush:Flee);
+			if(closestGhost.first >= 0 && closestGhost.first < 5) return Flee;
 			return Gather;
 		}
 
@@ -98,16 +99,27 @@ struct PLAYER_NAME : public Player {
 			switch(s) {
 				case Flee:{
 					float f_contrib = 1-(float(getClosestRobot(Ghost,pacman(me()).pos,Ghost, true).first)/FLEE_RADIUS);
+					cerr << "FLEE (" << f_contrib << ")" << endl;
 					return  scorePositionPacManGather(p)*(1-f_contrib)+scorePositionPacManFlee(p)*f_contrib;
 				}
 				case Gather:
+					cerr << "GATHER" << endl;
 					return scorePositionPacManGather(p);
-				case PillRush:
-					return -getClosestCell(Pill, p, PacMan, false).first;
-				case HammerRush:
-					return -getClosestCell(Hammer , p, PacMan, false).first;
-				case KillRush:
-					return -getClosestRobot(Ghost, p, PowerPacMan, false).first;
+				case PillRush: {
+					cerr << "PILLRUSH" << endl;
+					double dist = getClosestCell(Pill, p, PacMan, false).first;
+					return (dist == -1? -100000000 : -dist);
+				}
+				case HammerRush: {
+					cerr << "HAMMERRUSH" << endl;
+					double dist = getClosestCell(Hammer , p, PacMan, false).first;
+					return (dist == -1? -100000000 : -dist);
+				}
+				case KillRush: {
+					cerr << "KILLRUSH" << endl;
+					double dist = getClosestRobot(Ghost, p, PowerPacMan, true).first;
+					return (dist == -1? -100000000 : -dist);
+				}
 			}
 			return 0.0f;
 		}
@@ -117,22 +129,13 @@ struct PLAYER_NAME : public Player {
 			Robot pac = pacman(me());
 
 			v_distloc hammers = getCellsByDistance(Hammer, p, pac.type, 5, false);
-			v_distloc pills = getCellsByDistance(Pill, p, pac.type, 5, true);
-			v_distloc cherries = getCellsByDistance(Bonus, p, pac.type, 5, true);
-			v_distloc dots = getCellsByDistance(Dot, p, pac.type, 100, false);
-			v_distloc mushrooms = getCellsByDistance(Mushroom, p, pac.type, 5, true);
-			v_distloc ghosts = getRobotsByDistance(Ghost, p, Ghost, nb_ghosts()*nb_players(), true);
+			if(!hammers.empty()) currentScore -= hammers[0].first*100;
+			else currentScore -= -100000;
 
-			if(!dots.empty()){
-				for(unsigned int i = 0; i < dots.size() && i < 1; ++i) {
-					currentScore -= dots[i].first;
-				}
-			}
-			if(!hammers.empty()){
-				for(unsigned int i = 0; i < hammers.size() && i < 1; ++i) {
-					currentScore -= hammers[i].first*5;
-				}
-			}
+			v_distloc dots = getCellsByDistance(Dot, p, pac.type, 5, false);
+			if(!dots.empty()) currentScore -= dots[0].first;
+			else currentScore -= 100;
+
 			return currentScore;
 		}
 
@@ -159,7 +162,11 @@ struct PLAYER_NAME : public Player {
 				if(cell(c).type == target) res.push_back(distloc(distances[c.i][c.j],c));
 				for(int i = 0; i < 4; ++i) {
 					Pos nPos = dest(c, d[i]);
-					if(visited[nPos.i][nPos.j] || !can_move(c,d[i],bot)) continue;
+					if(visited[nPos.i][nPos.j]
+					   || (!fly && !can_move(c,d[i],bot)
+						   || (fly && (cell(c).type == Wall || (bot != Ghost && cell(c).type == Gate)))
+						   )
+					   ) continue;
 					distances[nPos.i][nPos.j] = distances[c.i][c.j]+1;
 					visited[nPos.i][nPos.j] = true;
 					q.push(nPos);
@@ -183,8 +190,8 @@ struct PLAYER_NAME : public Player {
 				for(int i = 0; i < 4; ++i) {
 					Pos nPos = dest(c, d[i]);
 					if(visited[nPos.i][nPos.j]
-					   || ((!fly && !can_move(c,d[i],bot))
-						   || (fly && cell(c).type == Wall && (bot != Ghost || cell(c).type == Gate))
+					   || (!fly && !can_move(c,d[i],bot)
+						   || (fly && (cell(c).type == Wall || (bot != Ghost && cell(c).type == Gate)))
 						   )
 					   ) continue;
 					distances[nPos.i][nPos.j] = distances[c.i][c.j]+1;
@@ -215,8 +222,8 @@ struct PLAYER_NAME : public Player {
 				for(int i = 0; i < 4; ++i) {
 					Pos nPos = dest(c, d[i]);
 					if(visited[nPos.i][nPos.j]
-					   || ((!fly && !can_move(c,d[i],bot))
-						   || (fly && cell(c).type == Wall && (bot != Ghost || cell(c).type == Gate))
+					   || (!fly && !can_move(c,d[i],bot)
+						   || (fly && (cell(c).type == Wall || (bot != Ghost && cell(c).type == Gate)))
 						   )
 					   ) continue;
 					distances[nPos.i][nPos.j] = distances[c.i][c.j]+1;
@@ -247,8 +254,8 @@ struct PLAYER_NAME : public Player {
 				for(int i = 0; i < 4; ++i) {
 					Pos nPos = dest(c, d[i]);
 					if(visited[nPos.i][nPos.j]
-					   || ((!fly && !can_move(c,d[i],bot))
-						   || (fly && cell(c).type == Wall && (bot != Ghost || cell(c).type == Gate))
+					   || (!fly && !can_move(c,d[i],bot)
+						   || (fly && (cell(c).type == Wall || (bot != Ghost && cell(c).type == Gate)))
 						   )
 					   ) continue;
 					distances[nPos.i][nPos.j] = distances[c.i][c.j]+1;
