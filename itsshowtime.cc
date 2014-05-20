@@ -51,11 +51,7 @@ struct PLAYER_NAME : public Player {
 					chosen = i;
 				}
 			}
-			if(debug) {
-				for(unsigned int i = 0; i < scores.size(); ++i) cerr << "D:" << d2c(d[i]) << " P:" << possible[i] << " S:" << scores[i] << endl;
-				if(chosen == -1)  {chosen = rand()%4; cerr << "(RAND)";};
-				cerr << " CHOSEN: " << d2c(d[chosen]) << endl;
-			}
+			if(chosen == -1)  {chosen = rand()%4;}
 			move_my_pacman(d[chosen]);
 
 			/////////////////////////GHOSTS
@@ -152,11 +148,11 @@ struct PLAYER_NAME : public Player {
 
 			v_distloc hammers = getCellsByDistance(Hammer, p, pac.type, 5, false);
 			if(!hammers.empty()) currentScore -= hammers[0].first*100;
-			else currentScore -= -100000;
+			else currentScore -= -1000;
 
 			v_distloc dots = getCellsByDistance(Dot, p, pac.type, 5, false);
 			if(!dots.empty()) currentScore -= dots[0].first;
-			else currentScore -= 100;
+			else currentScore -= 1000;
 
 			return currentScore;
 		}
@@ -165,7 +161,7 @@ struct PLAYER_NAME : public Player {
 			double currentScore = 0;
 			v_distloc ghosts = getRobotsByDistance(Ghost, p, Ghost, nb_ghosts()*nb_players(), true);
 			for(unsigned int i = 0; i < ghosts.size() && i < 1; ++i) {
-				currentScore -= ghosts[i].first;
+				currentScore += ghosts[i].first*1000;
 			}
 			return currentScore;
 		}
