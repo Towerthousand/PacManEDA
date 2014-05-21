@@ -90,7 +90,7 @@ struct PLAYER_NAME : public Player {
 				v[1] = getClosestRobot(Ghost,closestHammer.second,Ghost,true);
 				v[2] = getClosestRobot(PowerPacMan,closestHammer.second,PowerPacMan,true);
 				if(v[2].first > 1) v[2].first /= 2;
-				if(v[1].first > 1 && p.type = PowerPacMan) v[1] = 10000000;
+				if(v[1].first > 1 && p.type == PowerPacMan) v[1].first = 10000000;
 				sort(v.begin(),v.end());
 				while(!v.empty() && v[0].first < 0) v.erase(v.begin());
 				if(!v.empty() && v[0].second == p.pos) return HammerRush;
